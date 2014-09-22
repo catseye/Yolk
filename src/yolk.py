@@ -28,7 +28,7 @@ class List(Sexpr):
        self.sexprs = sexprs
 
     def __str__(self):
-       return "(%s)" % ' '.join([str(s) for s in self.sexprs])
+       return "(%s)" % ' '.join([s.__str__() for s in self.sexprs])
 
     def head(self):
        return self.sexprs[0]
@@ -108,7 +108,8 @@ def eval(full, prog, arg):
             return eval(full, prog.tail().tail().tail().tail().head(), arg)
     if prog.head().is_atom('self'):
         return eval(full, full, eval(full, prog.tail().head(), arg))
-    return Atom('head').head()
+    raise ValueError("Cannot evaluate %r" % prog)
+    # return Atom('head').head()  # too clever for rpython
 
 
 def run(ptext, atext):
@@ -116,7 +117,7 @@ def run(ptext, atext):
     return eval(p, p, Parser(atext).sexpr())
 
 
-if __name__ == '__main__':
+def main():
     import sys
     with open(sys.argv[1], 'r') as f:
         inp = sys.stdin.read()
@@ -124,3 +125,43 @@ if __name__ == '__main__':
             inp = 'ifeq'
         result = run(f.read(), inp)
         print result
+
+
+def target(*args):
+    import os
+    
+    def rpython_load(filename):
+        fd = os.open(filename, os.O_RDONLY, 0644)
+        text = ''
+        chunk = os.read(fd, 1024)
+        text += chunk
+        while len(chunk) == 1024:
+            chunk = os.read(fd, 1024)
+            text += chunk
+        os.close(fd)
+        return text
+
+    def rpython_input():
+        accum = ''
+        done = False
+        while not done:
+            s = os.read(1, 1)
+            if not s:
+                done = True
+            accum += s
+        return accum
+
+    def rpython_main(argv):
+        inp = rpython_input()
+        if not inp:
+            inp = 'ifeq'
+        program = rpython_load(argv[1])
+        result = run(program, inp)
+        print result.__str__()
+        return 0
+
+    return rpython_main, None
+
+
+if __name__ == '__main__':
+    main()
