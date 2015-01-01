@@ -246,7 +246,7 @@ Now we test it.
 
     -> Tests for functionality "Evaluate Yolk program"
 
-Now the final stroke -- fix the implementation of `self`.  This is kind of
+Now the final stroke — fix the implementation of `self`.  This is kind of
 tricky.
 
 In the MCI, `self` is used for recursively interpreting parts of the "target
