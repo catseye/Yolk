@@ -1,6 +1,13 @@
 Yolk
 ====
 
+Version 1.0
+| _Wiki entry_ [@ esolangs.org](https://esolangs.org/wiki/Yolk)
+| _See also:_ [Pixley](https://github.com/catseye/Pixley#readme)
+∘ [Exanoke](https://github.com/catseye/Exanoke#readme)
+
+- - - -
+
 Yolk is a programming language (or computational calculus) with a very
 small meta-circular definition.
 
@@ -448,7 +455,7 @@ Discussion
 
 ### Comparison to Pixley ###
 
-Yolk is quite similar to Pixley.  The main differences between Pixley and
+Yolk is quite similar to [Pixley][].  The main differences between Pixley and
 Yolk are:
 
 *   Yolk is not a subset of R5RS Scheme
@@ -576,7 +583,7 @@ handling `cons` at all, because `cons` is only used in the definition of
 
 And you'd think, maybe, this can interpret itself.  And, maybe, that because
 it works on smaller and smaller data each time, it is primitive recursive
-(a la Exanoke.)  Except, no.  The definition of `self` in the sketch is wrong,
+(a la [Exanoke][].)  Except, no.  The definition of `self` in the sketch is wrong,
 really quite wrong.  And to fix it, you need to be able to hold multiple
 data in `arg`, and take it apart to find the code vs. the real data, and put
 it back together again — and to put it back together again, you need `cons`.
@@ -597,3 +604,6 @@ even if it exists, would be quite a bit larger than this.
 Chris Pressey  
 London, UK  
 August 24th, 2014
+
+[Pixley]: https://catseye.tc/node/Pixley
+[Exanoke]: https://catseye.tc/node/Exanoke
