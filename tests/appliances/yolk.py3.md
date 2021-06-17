@@ -1,0 +1,2 @@
+    -> Functionality "Evaluate Yolk program" is implemented by
+    -> shell command "python3 src/yolk.py %(test-body-file) <%(test-input-file)"

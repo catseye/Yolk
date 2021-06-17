@@ -124,14 +124,14 @@ def main():
         if not inp:
             inp = 'ifeq'
         result = run(f.read(), inp)
-        print result
+        print(result)
 
 
 def target(*args):
     import os
     
     def rpython_load(filename):
-        fd = os.open(filename, os.O_RDONLY, 0644)
+        fd = os.open(filename, os.O_RDONLY, 0o644)
         text = ''
         chunk = os.read(fd, 1024)
         text += chunk
@@ -157,7 +157,7 @@ def target(*args):
             inp = 'ifeq'
         program = rpython_load(argv[1])
         result = run(program, inp)
-        print result.__str__()
+        print(result.__str__())
         return 0
 
     return rpython_main, None

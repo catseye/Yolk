@@ -18,9 +18,6 @@ Basic Semantics
 
     -> Tests for functionality "Evaluate Yolk program"
 
-    -> Functionality "Evaluate Yolk program" is implemented by
-    -> shell command "src/yolk.py %(test-body-file) <%(test-input-file)"
-
 `(quote A)` evaluates to A.  (It does not evaluate A.)
 
     | (quote cons)
