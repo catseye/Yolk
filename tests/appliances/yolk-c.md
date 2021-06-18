@@ -10,4 +10,4 @@ very well.  Specifically, they dump core.  It is for this very reason that
 
     -> Functionality "Evaluate Yolk program" is implemented by
     -> shell command
-    -> "fa-under-pty ./yolk-c %(test-body-file) %(test-input-file)"
+    -> "fa-under-pty ./bin/yolk-c %(test-body-file) %(test-input-file)"
