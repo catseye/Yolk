@@ -90,31 +90,32 @@ def cons(a, b):
     return List([a] + b.sexprs)
 
 
-def eval(full, prog, arg):
+def eval_yolk(full, prog, arg):
     if prog.is_atom('arg'):
         return arg
     if prog.head().is_atom('head'):
-        return eval(full, prog.tail().head(), arg).head()
+        return eval_yolk(full, prog.tail().head(), arg).head()
     if prog.head().is_atom('tail'):
-        return eval(full, prog.tail().head(), arg).tail()
+        return eval_yolk(full, prog.tail().head(), arg).tail()
     if prog.head().is_atom('cons'):
-        return cons(eval(full, prog.tail().head(), arg), eval(full, prog.tail().tail().head(), arg))
+        return cons(eval_yolk(full, prog.tail().head(), arg), eval_yolk(full, prog.tail().tail().head(), arg))
     if prog.head().is_atom('quote'):
         return prog.tail().head()
     if prog.head().is_atom('ifeq'):
-        if eval(full, prog.tail().head(), arg) == eval(full, prog.tail().tail().head(), arg):
-            return eval(full, prog.tail().tail().tail().head(), arg)
+        if eval_yolk(full, prog.tail().head(), arg) == eval_yolk(full, prog.tail().tail().head(), arg):
+            return eval_yolk(full, prog.tail().tail().tail().head(), arg)
         else:
-            return eval(full, prog.tail().tail().tail().tail().head(), arg)
+            return eval_yolk(full, prog.tail().tail().tail().tail().head(), arg)
     if prog.head().is_atom('self'):
-        return eval(full, full, eval(full, prog.tail().head(), arg))
+        return eval_yolk(full, full, eval_yolk(full, prog.tail().head(), arg))
     raise ValueError("Cannot evaluate %r" % prog)
-    # return Atom('head').head()  # too clever for rpython
 
 
 def run(ptext, atext):
     p = Parser(ptext).sexpr()
-    return eval(p, p, Parser(atext).sexpr())
+    a = Parser(atext).sexpr()
+    r = eval_yolk(p, p, a)
+    return r
 
 
 def main():
