@@ -121,11 +121,16 @@ def run(ptext, atext):
 def main():
     import sys
     with open(sys.argv[1], 'r') as f:
+        prog = f.read()
+    if len(sys.argv) >= 4 and sys.argv[2] == '-i':
+        with open(sys.argv[3], 'r') as f:
+            inp = f.read()
+    else:
         inp = sys.stdin.read()
-        if not inp:
-            inp = 'ifeq'
-        result = run(f.read(), inp)
-        print(result)
+    if not inp:
+        inp = 'ifeq'
+    result = run(prog, inp)
+    print(result)
 
 
 def target(*args):
@@ -153,10 +158,13 @@ def target(*args):
         return accum
 
     def rpython_main(argv):
-        inp = rpython_input()
+        program = rpython_load(argv[1])
+        if len(argv) >= 4 and argv[2] == '-i':
+            inp = rpython_load(argv[3])
+        else:
+            inp = rpython_input()
         if not inp:
             inp = 'ifeq'
-        program = rpython_load(argv[1])
         result = run(program, inp)
         print(result.__str__())
         return 0
