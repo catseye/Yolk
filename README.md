@@ -130,9 +130,6 @@ reduce repetition in this document.
 
     -> Tests for functionality "Evaluate Yolk program with MCI Sketch"
 
-    -> Functionality "Evaluate Yolk program with MCI Sketch" is implemented by
-    -> shell command "src/yolk.py eg/mci-sketch.yolk <%(test-body-file)"
-
     | (quote cons)
     = cons
 
@@ -163,9 +160,6 @@ reduce repetition in this document.
 ### With Input ###
 
     -> Tests for functionality "Evaluate Yolk program with MCI with arg"
-
-    -> Functionality "Evaluate Yolk program with MCI with arg" is implemented by
-    -> shell command "src/yolk.py eg/mci-with-arg.yolk <%(test-body-file)"
 
 However, there is a small problem.  Where does this interpreter get its
 input from, for `arg`?
@@ -381,9 +375,6 @@ And we hold our breath and:
 Huzzah!  Now we test all the things again...
 
     -> Tests for functionality "Evaluate Yolk program with MCI"
-
-    -> Functionality "Evaluate Yolk program with MCI" is implemented by
-    -> shell command "src/yolk.py eg/yolk.yolk <%(test-body-file)"
 
 `(quote A)` evaluates to A.  (It does not evaluate A.)
 
