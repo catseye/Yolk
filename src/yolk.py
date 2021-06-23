@@ -90,41 +90,47 @@ def cons(a, b):
     return List([a] + b.sexprs)
 
 
-def eval(full, prog, arg):
+def eval_yolk(full, prog, arg):
     if prog.is_atom('arg'):
         return arg
     if prog.head().is_atom('head'):
-        return eval(full, prog.tail().head(), arg).head()
+        return eval_yolk(full, prog.tail().head(), arg).head()
     if prog.head().is_atom('tail'):
-        return eval(full, prog.tail().head(), arg).tail()
+        return eval_yolk(full, prog.tail().head(), arg).tail()
     if prog.head().is_atom('cons'):
-        return cons(eval(full, prog.tail().head(), arg), eval(full, prog.tail().tail().head(), arg))
+        return cons(eval_yolk(full, prog.tail().head(), arg), eval_yolk(full, prog.tail().tail().head(), arg))
     if prog.head().is_atom('quote'):
         return prog.tail().head()
     if prog.head().is_atom('ifeq'):
-        if eval(full, prog.tail().head(), arg) == eval(full, prog.tail().tail().head(), arg):
-            return eval(full, prog.tail().tail().tail().head(), arg)
+        if eval_yolk(full, prog.tail().head(), arg) == eval_yolk(full, prog.tail().tail().head(), arg):
+            return eval_yolk(full, prog.tail().tail().tail().head(), arg)
         else:
-            return eval(full, prog.tail().tail().tail().tail().head(), arg)
+            return eval_yolk(full, prog.tail().tail().tail().tail().head(), arg)
     if prog.head().is_atom('self'):
-        return eval(full, full, eval(full, prog.tail().head(), arg))
+        return eval_yolk(full, full, eval_yolk(full, prog.tail().head(), arg))
     raise ValueError("Cannot evaluate %r" % prog)
-    # return Atom('head').head()  # too clever for rpython
 
 
 def run(ptext, atext):
     p = Parser(ptext).sexpr()
-    return eval(p, p, Parser(atext).sexpr())
+    a = Parser(atext).sexpr()
+    r = eval_yolk(p, p, a)
+    return r
 
 
 def main():
     import sys
     with open(sys.argv[1], 'r') as f:
+        prog = f.read()
+    if len(sys.argv) >= 4 and sys.argv[2] == '-i':
+        with open(sys.argv[3], 'r') as f:
+            inp = f.read()
+    else:
         inp = sys.stdin.read()
-        if not inp:
-            inp = 'ifeq'
-        result = run(f.read(), inp)
-        print(result)
+    if not inp:
+        inp = 'ifeq'
+    result = run(prog, inp)
+    print(result)
 
 
 def target(*args):
@@ -152,10 +158,13 @@ def target(*args):
         return accum
 
     def rpython_main(argv):
-        inp = rpython_input()
+        program = rpython_load(argv[1])
+        if len(argv) >= 4 and argv[2] == '-i':
+            inp = rpython_load(argv[3])
+        else:
+            inp = rpython_input()
         if not inp:
             inp = 'ifeq'
-        program = rpython_load(argv[1])
         result = run(program, inp)
         print(result.__str__())
         return 0

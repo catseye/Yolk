@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+import pty
+import sys
+import os
+
+
+command = sys.argv[1]
+args = sys.argv[2:]
+
+(pid, fd) = pty.fork()
+if pid == 0:
+    # I'm the child
+    os.execvp(command, [command] + args)
+else:
+    # I'm the parent
+    output = ''
+    SIZE = 1
+    while True:
+        try:
+            chunk = os.read(fd, SIZE)
+        except OSError:  # segfault causes this
+            chunk = ''
+        output += chunk
+        if len(chunk) < SIZE:
+            break
+    os.close(fd)
+    (pid, exitcode) = os.waitpid(pid, 0)
+    core_dumped = (exitcode & 128) == 128
+    exitcode = exitcode >> 8
+    if core_dumped and exitcode == 0:
+        # force the exitcode to non-zero if we dumped core.
+        exitcode = 1
+    if exitcode == 0:
+        sys.stdout.write(output)
+    else:
+        sys.stderr.write(output)
+    sys.exit(exitcode)
