@@ -1,6 +1,12 @@
 #!/bin/sh
 
-APPLIANCES='tests/appliances/yolk.py2.md tests/appliances/yolk.py3.md'
+APPLIANCES=""
+if command -v python2 > /dev/null 2>&1; then
+    APPLIANCES="$APPLIANCES tests/appliances/yolk.py2.md"
+fi
+if command -v python3 > /dev/null 2>&1; then
+    APPLIANCES="$APPLIANCES tests/appliances/yolk.py3.md"
+fi
 if [ -x ./bin/yolk-c ]; then
     # Testing the RPython-built executable is still disabled, but at least
     # we now know a little more about why it only passes 14 of the 45 tests.
@@ -21,6 +27,11 @@ if [ -x ./bin/yolk-c ]; then
     #
     # APPLIANCES="$APPLIANCES tests/appliances/yolk-c.md"
     echo 'pass' >/dev/null
+fi
+
+if [ "x$APPLIANCES" = "x" ]; then
+    echo "No suitable Python versions or Yolk implementations found."
+    exit 1
 fi
 
 falderal $APPLIANCES README.md $*
