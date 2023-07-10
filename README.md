@@ -56,7 +56,7 @@ If A is not a list, `(tail A)` crashes.
     ? 
 
 `(cons A B)` evaluates A to a S-expression and B to a list, and evaluates to a list
-which is the same as B except it has an extra element on the front, B.
+which is the same as B except it has an extra element on the front, A.
 
     | (cons (quote quote) (quote (head tail cons)))
     = (quote head tail cons)
