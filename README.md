@@ -3,8 +3,8 @@ Yolk
 
 Version 1.0
 | _Wiki entry_ [@ esolangs.org](https://esolangs.org/wiki/Yolk)
-| _See also:_ [Pixley](https://github.com/catseye/Pixley#readme)
-∘ [Exanoke](https://github.com/catseye/Exanoke#readme)
+| _See also:_ [Pixley](https://codeberg.org/catseye/Pixley#pixley)
+∘ [Exanoke](https://codeberg.org/catseye/Exanoke#exanoke)
 
 - - - -
 
